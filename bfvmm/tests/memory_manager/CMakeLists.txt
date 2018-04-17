@@ -16,23 +16,14 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-do_test(test_debug_ring
-    SOURCES debug_ring/test_debug_ring.cpp
-    DEPENDS bfvmm_debug
-    DEFINES STATIC_DEBUG
-    DEFINES STATIC_INTRINSICS
+do_test(test_buddy_allocator
+    SOURCES test_buddy_allocator.cpp
+    DEFINES STATIC_MEMORY_MANAGER
 )
 
-do_test(test_serial_ns16550a
-    SOURCES serial/test_serial_ns16550a.cpp
-    DEPENDS bfvmm_debug
-    DEFINES STATIC_DEBUG
-    DEFINES STATIC_INTRINSICS
-)
-
-do_test(test_serial_port_pl011
-    SOURCES serial/test_serial_pl011.cpp
-    DEPENDS bfvmm_debug
-    DEFINES STATIC_DEBUG
-    DEFINES STATIC_INTRINSICS
-)
+if(NOT WIN32)
+    do_test(test_object_allocator
+        SOURCES test_object_allocator.cpp
+        DEFINES STATIC_MEMORY_MANAGER
+    )
+endif()
