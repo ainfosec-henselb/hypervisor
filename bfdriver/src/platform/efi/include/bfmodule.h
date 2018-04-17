@@ -5,7 +5,7 @@
 #include "bfefi.h"
 #include "common.h"
 
-#define HYPERVISOR_MODULE(mod) \
+#define HYPERVISOR_MODULE(mod)     \
     extern unsigned char mod[];    \
     extern unsigned int mod##_len;
 
@@ -13,6 +13,7 @@
 #undef HYPERVISOR_MODULE
 
 #define HYPERVISOR_MODULE(mod)                                      \
+    Print(L"Adding module " #mod "\n");                             \
     ret = common_add_module((const char*)mod, (uint64_t)mod##_len); \
     if (ret < 0) {                                                  \
         Print(L"common_add_module returned %a\n", ec_to_str(ret));  \
@@ -22,7 +23,6 @@
 uint64_t add_hypervisor_modules()
 {
     int64_t ret;
-    Print(L"Adding BF modules\n");
     while (1) {
 #include "modlist.h"
         break;

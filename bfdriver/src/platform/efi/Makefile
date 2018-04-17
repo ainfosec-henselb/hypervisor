@@ -5,7 +5,9 @@ ARCH		:= 	$(shell uname -m)
 
 include Make.efi
 
+# These values are overwritten by values passed in by cmake
 SYSROOT		?= ../../../../../buildex/prefixes/x86_64-userspace-elf
+MODULES		?= ../../../../../buildex/prefixes/x86_64-vmm-elf/bin/eapis_efi_static
 
 LIBDIR		:= $(SYSROOT)/lib
 
@@ -29,11 +31,11 @@ LOADLIBES	+=  -T $(LDSCRIPT)
 FORMAT		:= -O binary --target=efi-app-$(ARCH)
 
 FILES		:= 	bfloader console boot platform common start x86_64 gnuefi/bflib
-OBJS		:=	$(foreach FILE,$(FILES),src/$(FILE).o)
-OBJS 		+=	$(foreach FILE,$(wildcard modules/*.c),$(FILE:.c=.o))
+OBJS		:=	$(foreach FILE,$(FILES),src/$(FILE).o) \
+				$(foreach FILE,$(wildcard modules/*.c),$(FILE:.c=.o))
 TARGET 		:=	bfloader
 
-all: $(TARGET).efi 
+all: modules $(TARGET).efi 
 
 $(TARGET).efi: $(TARGET).so
 	objcopy -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel \
@@ -44,7 +46,7 @@ $(TARGET).efi: $(TARGET).so
 $(TARGET).so: $(OBJS)
 	$(LD) $(LDFLAGS) $^ -o $@ $(LOADLIBES)
 
-$(OBJS): Makefile modules
+$(OBJS): Makefile
 
 %.o: %.S
 	$(CC) $(CPPFLAGS) $(CFLAGS) $< -c -o $@
@@ -52,10 +54,13 @@ $(OBJS): Makefile modules
 src/common.o: ../../common.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) $^ -c -o $@
 
-modules: /home/dev/code/hypervisor/buildex/prefixes/x86_64-vmm-elf/bin/eapis_efi_static
+modules: $(MODULES)
 	./gen_modules.sh $^
 
 clean: 
 	rm -rf $(TARGET).efi $(TARGET).so src/*.o modules/*.o
+
+cleanall: clean
+	rm -rf modules/*
 
 .PHONY: clean modules

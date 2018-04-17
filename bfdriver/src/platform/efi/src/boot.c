@@ -18,9 +18,6 @@ EFI_STATUS bf_boot_next_by_order()
         return status;
     }
 
-    // Print(L"size: %u\n", li->Revision);
-    // Print(L"addr: %x\n", li->LoadOptions);
-
     EFI_DEVICE_PATH *dev = DevicePathFromHandle(li->DeviceHandle);
     if (!dev) {
         Print(L"Unable to get boot device path.\n");

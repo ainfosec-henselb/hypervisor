@@ -52,7 +52,7 @@ VOID *bf_allocate_runtime_zero_pool(UINTN size)
 {
     EFI_STATUS status;
     VOID *ret = NULL;
-    status = gBS->AllocatePool(EfiRuntimeServicesData,
+    status = gBS->AllocatePool(EfiRuntimeServicesCode,
                                size,
                                &ret);
 

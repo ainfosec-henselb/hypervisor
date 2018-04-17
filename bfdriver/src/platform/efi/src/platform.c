@@ -71,7 +71,6 @@ void platform_free_rw(const void *addr, uint64_t len)
 
 fail:
     return;
-
 }
 
 /**
@@ -85,14 +84,7 @@ fail:
  */
 void platform_free_rwe(const void *addr, uint64_t len)
 {
-    EFI_STATUS status;
-    status = gBS->FreePages((EFI_PHYSICAL_ADDRESS)addr,
-                            (len / EFI_PAGE_SIZE) + 1);
-    CHERROR(status);
-
-fail:
-    return;
-
+    platform_free_rw(addr, len);
 }
 
 /**
@@ -165,7 +157,7 @@ void platform_stop(void)
 int64_t
 platform_num_cpus(void)
 {
-    EFI_STATUS status = EFI_SUCCESS;
+    EFI_STATUS status = EFI_NOT_FOUND;
     UINTN N;
     UINTN NEnabled;
 
@@ -173,13 +165,11 @@ platform_num_cpus(void)
         status = g_mp_services->GetNumberOfProcessors(g_mp_services,
                  &N,
                  &NEnabled);
+    CHERROR(status);
+    return N;
 
-    if (!EFI_ERROR(status)) {
-        return N;
-    }
-    else {
-        return 0;
-    }
+fail:
+    return 0;
 }
 
 /**
@@ -194,15 +184,11 @@ int64_t
 platform_set_affinity(int64_t affinity)
 {
     EFI_STATUS status;
-    Print(L"platform_set_affinity %d\n", affinity);
 
     UINTN ret;
     status = g_mp_services->WhoAmI(g_mp_services,
                                    &ret);
-    if (status != EFI_SUCCESS) {
-        Print(L"WhoAmI error %r\n", status);
-        return -1;
-    }
+    CHERROR(status);
 
     if (ret == (UINTN)affinity) {
         return ret;
@@ -212,21 +198,17 @@ platform_set_affinity(int64_t affinity)
                                             affinity,
                                             TRUE,
                                             NULL);
-    if (status != EFI_SUCCESS) {
-        Print(L"EnableDisableAP error %r\n", status);
-        return -1;
-    }
+    CHERROR(status);
 
     status = g_mp_services->SwitchBSP(g_mp_services,
                                       affinity,
                                       TRUE);
-    if (status != EFI_SUCCESS) {
-        Print(L"SwitchBSP error %r\n", status);
-        return -1;
-    }
+    CHERROR(status);
 
-    Print(L"platform_set_affinity success\n");
     return ret;
+
+fail:
+    return -1;
 
 }
 
@@ -254,8 +236,7 @@ int64_t platform_get_current_cpu_num(void)
     UINTN ret;
     status = g_mp_services->WhoAmI(g_mp_services,
                                    &ret);
-    if (EFI_ERROR(status)) { goto fail; }
-
+    CHERROR(status);
     return ret;
 
 fail:

@@ -13,8 +13,6 @@ int printf(const char *format, ...)
         counter++;
     }
 
-    counter++;
-
     CHAR16 *buf = (CHAR16 *)AllocateZeroPool(counter << 1);
     if (!buf) { return 0; }
 

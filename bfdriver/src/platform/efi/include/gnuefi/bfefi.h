@@ -13,7 +13,7 @@
 #define __FILE__ __FILENAME__
 #endif
 
-#define CHERROR(status)                                                    \
+#define CHERROR(status)                                                        \
     if(EFI_ERROR(status)) {                                                    \
         Print(L"\n %a: %d: returned status %r\n", __FILE__, __LINE__, status); \
         goto fail;                                                             \

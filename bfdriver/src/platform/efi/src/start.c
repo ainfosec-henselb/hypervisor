@@ -19,14 +19,12 @@ VOID bf_cpuid_on_core(VOID *data)
 
 VOID bf_start_hypervisor_on_core(VOID *data)
 {
-    //Print(L"start_hypervisor_on_core entered\n");
     (void)data;
 
     _writeeflags(_readeflags() & ~(1 << 18));
 
     KDESCRIPTOR old_gdt;
     _sgdt((void *)&old_gdt.Limit);
-    uint16_t old_tr = _str();
 
     PKGDTENTRY64 tss_entry, new_gdt;
     PKTSS64 tss;
@@ -38,17 +36,17 @@ VOID bf_start_hypervisor_on_core(VOID *data)
         newsize = KGDT64_SYS_TSS + sizeof(*tss_entry);
     }
 
-    new_gdt = (PKGDTENTRY64)bf_allocate_runtime_zero_pool(newsize);
+    new_gdt = (PKGDTENTRY64)bf_allocate_zero_pool(newsize);
     if (new_gdt == NULL) {
-        Print(L"Error: bf_start_hypervisor_on_core: bf_allocate_runtime_zero_pool1\n");
+        Print(L"Error: bf_start_hypervisor_on_core: bf_allocate_zero_pool1\n");
         return;
     }
 
     gBS->CopyMem(new_gdt, gdtr.Base, gdtr.Limit + 1);
 
-    tss = (PKTSS64)bf_allocate_runtime_zero_pool(sizeof(*tss) * 2);
+    tss = (PKTSS64)bf_allocate_zero_pool(sizeof(*tss) * 2);
     if (tss == NULL) {
-        Print(L"Error: bf_start_hypervisor_on_core: bf_allocate_runtime_zero_pool2\n");
+        Print(L"Error: bf_start_hypervisor_on_core: bf_allocate_zero_pool2\n");
         return;
     }
 
@@ -78,17 +76,15 @@ VOID bf_start_hypervisor_on_core(VOID *data)
         return;
     }
 
-    // Load previous gdt/tr
-    _lgdt((void*)&old_gdt.Limit);
-    _ltr(old_tr);
+    // Load previous gdt
+    _lgdt((void *)&old_gdt.Limit);
 
-    bf_free_pool((void*)new_gdt);
-    bf_free_pool((void*)tss);
+    bf_free_pool((void *)new_gdt);
+    bf_free_pool((void *)tss);
 
     Print(L"Core started.\n");
 
     return;
-
 }
 
 EFI_STATUS bf_start_by_startupallaps()
@@ -119,9 +115,6 @@ EFI_STATUS bf_start_by_startupallaps()
                                             NULL,
                                             NULL);
         CHERROR(status);
-
-        console_get_keystroke(NULL);
-
     }
 
     bf_start_hypervisor_on_core(NULL);
@@ -245,7 +238,6 @@ EFI_STATUS bf_start_by_interactive()
             }
         }
         else {
-            //Print(L"sc, uc: %x, %x\n", pressed.ScanCode, pressed.UnicodeChar);
             break;
         }
     }
@@ -255,5 +247,4 @@ EFI_STATUS bf_start_by_interactive()
 
 fail:
     return status;
-
 }
