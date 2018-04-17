@@ -49,9 +49,9 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 /// Global ID for the EFI_MP_SERVICES_PROTOCOL.
 ///
 #define EFI_MP_SERVICES_PROTOCOL_GUID \
-  { \
-    0x3fdda605, 0xa76e, 0x4f46, {0xad, 0x29, 0x12, 0xf4, 0x53, 0x1b, 0x3d, 0x08} \
-  }
+    { \
+        0x3fdda605, 0xa76e, 0x4f46, {0xad, 0x29, 0x12, 0xf4, 0x53, 0x1b, 0x3d, 0x08} \
+    }
 
 ///
 /// Forward declaration for the EFI_MP_SERVICES_PROTOCOL.
@@ -88,56 +88,56 @@ typedef struct _EFI_MP_SERVICES_PROTOCOL EFI_MP_SERVICES_PROTOCOL;
 /// Structure that describes the pyhiscal location of a logical CPU.
 ///
 typedef struct {
-  ///
-  /// Zero-based physical package number that identifies the cartridge of the processor.
-  ///
-  UINT32  Package;
-  ///
-  /// Zero-based physical core number within package of the processor.
-  ///
-  UINT32  Core;
-  ///
-  /// Zero-based logical thread number within core of the processor.
-  ///
-  UINT32  Thread;
+    ///
+    /// Zero-based physical package number that identifies the cartridge of the processor.
+    ///
+    UINT32  Package;
+    ///
+    /// Zero-based physical core number within package of the processor.
+    ///
+    UINT32  Core;
+    ///
+    /// Zero-based logical thread number within core of the processor.
+    ///
+    UINT32  Thread;
 } EFI_CPU_PHYSICAL_LOCATION;
 
 ///
 /// Structure that describes information about a logical CPU.
 ///
 typedef struct {
-  ///
-  /// The unique processor ID determined by system hardware.  For IA32 and X64,
-  /// the processor ID is the same as the Local APIC ID. Only the lower 8 bits
-  /// are used, and higher bits are reserved.  For IPF, the lower 16 bits contains
-  /// id/eid, and higher bits are reserved.
-  ///
-  UINT64                     ProcessorId;
-  ///
-  /// Flags indicating if the processor is BSP or AP, if the processor is enabled
-  /// or disabled, and if the processor is healthy. Bits 3..31 are reserved and
-  /// must be 0.
-  ///
-  /// <pre>
-  /// BSP  ENABLED  HEALTH  Description
-  /// ===  =======  ======  ===================================================
-  ///  0      0       0     Unhealthy Disabled AP.
-  ///  0      0       1     Healthy Disabled AP.
-  ///  0      1       0     Unhealthy Enabled AP.
-  ///  0      1       1     Healthy Enabled AP.
-  ///  1      0       0     Invalid. The BSP can never be in the disabled state.
-  ///  1      0       1     Invalid. The BSP can never be in the disabled state.
-  ///  1      1       0     Unhealthy Enabled BSP.
-  ///  1      1       1     Healthy Enabled BSP.
-  /// </pre>
-  ///
-  UINT32                     StatusFlag;
-  ///
-  /// The physical location of the processor, including the physical package number
-  /// that identifies the cartridge, the physical core number within package, and
-  /// logical thread number within core.
-  ///
-  EFI_CPU_PHYSICAL_LOCATION  Location;
+    ///
+    /// The unique processor ID determined by system hardware.  For IA32 and X64,
+    /// the processor ID is the same as the Local APIC ID. Only the lower 8 bits
+    /// are used, and higher bits are reserved.  For IPF, the lower 16 bits contains
+    /// id/eid, and higher bits are reserved.
+    ///
+    UINT64                     ProcessorId;
+    ///
+    /// Flags indicating if the processor is BSP or AP, if the processor is enabled
+    /// or disabled, and if the processor is healthy. Bits 3..31 are reserved and
+    /// must be 0.
+    ///
+    /// <pre>
+    /// BSP  ENABLED  HEALTH  Description
+    /// ===  =======  ======  ===================================================
+    ///  0      0       0     Unhealthy Disabled AP.
+    ///  0      0       1     Healthy Disabled AP.
+    ///  0      1       0     Unhealthy Enabled AP.
+    ///  0      1       1     Healthy Enabled AP.
+    ///  1      0       0     Invalid. The BSP can never be in the disabled state.
+    ///  1      0       1     Invalid. The BSP can never be in the disabled state.
+    ///  1      1       0     Unhealthy Enabled BSP.
+    ///  1      1       1     Healthy Enabled BSP.
+    /// </pre>
+    ///
+    UINT32                     StatusFlag;
+    ///
+    /// The physical location of the processor, including the physical package number
+    /// that identifies the cartridge, the physical core number within package, and
+    /// logical thread number within core.
+    ///
+    EFI_CPU_PHYSICAL_LOCATION  Location;
 } EFI_PROCESSOR_INFORMATION;
 
 /**
@@ -151,8 +151,8 @@ typedef struct {
 typedef
 VOID
 (EFIAPI *EFI_AP_PROCEDURE)(
-  IN OUT VOID  *Buffer
-  );
+    IN OUT VOID  *Buffer
+);
 
 /**
   This service retrieves the number of logical processor in the platform
@@ -193,10 +193,10 @@ VOID
 typedef
 EFI_STATUS
 (EFIAPI *EFI_MP_SERVICES_GET_NUMBER_OF_PROCESSORS)(
-  IN  EFI_MP_SERVICES_PROTOCOL  *This,
-  OUT UINTN                     *NumberOfProcessors,
-  OUT UINTN                     *NumberOfEnabledProcessors
-  );
+    IN  EFI_MP_SERVICES_PROTOCOL  *This,
+    OUT UINTN                     *NumberOfProcessors,
+    OUT UINTN                     *NumberOfEnabledProcessors
+);
 
 /**
   Gets detailed MP-related information on the requested processor at the
@@ -227,10 +227,10 @@ EFI_STATUS
 typedef
 EFI_STATUS
 (EFIAPI *EFI_MP_SERVICES_GET_PROCESSOR_INFO)(
-  IN  EFI_MP_SERVICES_PROTOCOL   *This,
-  IN  UINTN                      ProcessorNumber,
-  OUT EFI_PROCESSOR_INFORMATION  *ProcessorInfoBuffer
-  );
+    IN  EFI_MP_SERVICES_PROTOCOL   *This,
+    IN  UINTN                      ProcessorNumber,
+    OUT EFI_PROCESSOR_INFORMATION  *ProcessorInfoBuffer
+);
 
 /**
   This service executes a caller provided function on all enabled APs. APs can
@@ -371,14 +371,14 @@ EFI_STATUS
 typedef
 EFI_STATUS
 (EFIAPI *EFI_MP_SERVICES_STARTUP_ALL_APS)(
-  IN  EFI_MP_SERVICES_PROTOCOL  *This,
-  IN  EFI_AP_PROCEDURE          Procedure,
-  IN  BOOLEAN                   SingleThread,
-  IN  EFI_EVENT                 WaitEvent               OPTIONAL,
-  IN  UINTN                     TimeoutInMicroSeconds,
-  IN  VOID                      *ProcedureArgument      OPTIONAL,
-  OUT UINTN                     **FailedCpuList         OPTIONAL
-  );
+    IN  EFI_MP_SERVICES_PROTOCOL  *This,
+    IN  EFI_AP_PROCEDURE          Procedure,
+    IN  BOOLEAN                   SingleThread,
+    IN  EFI_EVENT                 WaitEvent               OPTIONAL,
+    IN  UINTN                     TimeoutInMicroSeconds,
+    IN  VOID                      *ProcedureArgument      OPTIONAL,
+    OUT UINTN                     **FailedCpuList         OPTIONAL
+);
 
 /**
   This service lets the caller get one enabled AP to execute a caller-provided
@@ -469,14 +469,14 @@ EFI_STATUS
 typedef
 EFI_STATUS
 (EFIAPI *EFI_MP_SERVICES_STARTUP_THIS_AP)(
-  IN  EFI_MP_SERVICES_PROTOCOL  *This,
-  IN  EFI_AP_PROCEDURE          Procedure,
-  IN  UINTN                     ProcessorNumber,
-  IN  EFI_EVENT                 WaitEvent               OPTIONAL,
-  IN  UINTN                     TimeoutInMicroseconds,
-  IN  VOID                      *ProcedureArgument      OPTIONAL,
-  OUT BOOLEAN                   *Finished               OPTIONAL
-  );
+    IN  EFI_MP_SERVICES_PROTOCOL  *This,
+    IN  EFI_AP_PROCEDURE          Procedure,
+    IN  UINTN                     ProcessorNumber,
+    IN  EFI_EVENT                 WaitEvent               OPTIONAL,
+    IN  UINTN                     TimeoutInMicroseconds,
+    IN  VOID                      *ProcedureArgument      OPTIONAL,
+    OUT BOOLEAN                   *Finished               OPTIONAL
+);
 
 /**
   This service switches the requested AP to be the BSP from that point onward.
@@ -516,10 +516,10 @@ EFI_STATUS
 typedef
 EFI_STATUS
 (EFIAPI *EFI_MP_SERVICES_SWITCH_BSP)(
-  IN EFI_MP_SERVICES_PROTOCOL  *This,
-  IN  UINTN                    ProcessorNumber,
-  IN  BOOLEAN                  EnableOldBSP
-  );
+    IN EFI_MP_SERVICES_PROTOCOL  *This,
+    IN  UINTN                    ProcessorNumber,
+    IN  BOOLEAN                  EnableOldBSP
+);
 
 /**
   This service lets the caller enable or disable an AP from this point onward.
@@ -565,11 +565,11 @@ EFI_STATUS
 typedef
 EFI_STATUS
 (EFIAPI *EFI_MP_SERVICES_ENABLEDISABLEAP)(
-  IN  EFI_MP_SERVICES_PROTOCOL  *This,
-  IN  UINTN                     ProcessorNumber,
-  IN  BOOLEAN                   EnableAP,
-  IN  UINT32                    *HealthFlag OPTIONAL
-  );
+    IN  EFI_MP_SERVICES_PROTOCOL  *This,
+    IN  UINTN                     ProcessorNumber,
+    IN  BOOLEAN                   EnableAP,
+    IN  UINT32                    *HealthFlag OPTIONAL
+);
 
 /**
   This return the handle number for the calling processor.  This service may be
@@ -598,9 +598,9 @@ EFI_STATUS
 typedef
 EFI_STATUS
 (EFIAPI *EFI_MP_SERVICES_WHOAMI)(
-  IN EFI_MP_SERVICES_PROTOCOL  *This,
-  OUT UINTN                    *ProcessorNumber
-  );
+    IN EFI_MP_SERVICES_PROTOCOL  *This,
+    OUT UINTN                    *ProcessorNumber
+);
 
 ///
 /// When installed, the MP Services Protocol produces a collection of services
@@ -632,13 +632,13 @@ EFI_STATUS
 /// UEFI images must be aware that the functionality of this protocol may be reduced.
 ///
 struct _EFI_MP_SERVICES_PROTOCOL {
-  EFI_MP_SERVICES_GET_NUMBER_OF_PROCESSORS  GetNumberOfProcessors;
-  EFI_MP_SERVICES_GET_PROCESSOR_INFO        GetProcessorInfo;
-  EFI_MP_SERVICES_STARTUP_ALL_APS           StartupAllAPs;
-  EFI_MP_SERVICES_STARTUP_THIS_AP           StartupThisAP;
-  EFI_MP_SERVICES_SWITCH_BSP                SwitchBSP;
-  EFI_MP_SERVICES_ENABLEDISABLEAP           EnableDisableAP;
-  EFI_MP_SERVICES_WHOAMI                    WhoAmI;
+    EFI_MP_SERVICES_GET_NUMBER_OF_PROCESSORS  GetNumberOfProcessors;
+    EFI_MP_SERVICES_GET_PROCESSOR_INFO        GetProcessorInfo;
+    EFI_MP_SERVICES_STARTUP_ALL_APS           StartupAllAPs;
+    EFI_MP_SERVICES_STARTUP_THIS_AP           StartupThisAP;
+    EFI_MP_SERVICES_SWITCH_BSP                SwitchBSP;
+    EFI_MP_SERVICES_ENABLEDISABLEAP           EnableDisableAP;
+    EFI_MP_SERVICES_WHOAMI                    WhoAmI;
 };
 
 extern EFI_GUID gEfiMpServiceProtocolGuid;

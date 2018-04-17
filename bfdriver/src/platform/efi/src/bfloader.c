@@ -7,10 +7,10 @@
 #include "common.h"
 
 EFI_HANDLE this_image_h;
-EFI_MP_SERVICES_PROTOCOL* g_mp_services;
+EFI_MP_SERVICES_PROTOCOL *g_mp_services;
 
-EFI_STATUS efi_main(EFI_HANDLE image_in, EFI_SYSTEM_TABLE* st_in)
-{   
+EFI_STATUS efi_main(EFI_HANDLE image_in, EFI_SYSTEM_TABLE *st_in)
+{
 
     bf_init_lib(image_in, st_in);
     //Print(L"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
@@ -48,7 +48,7 @@ EFI_STATUS efi_main(EFI_HANDLE image_in, EFI_SYSTEM_TABLE* st_in)
     Print(L"Booting next image in BootOrder.\n");
     console_get_keystroke(NULL);
 
-    // returning EFI_NOT_FOUND generally causes firmware to boot next 
+    // returning EFI_NOT_FOUND generally causes firmware to boot next
     // image in boot order without further prompting
     return EFI_NOT_FOUND;
 

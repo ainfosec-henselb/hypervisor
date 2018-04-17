@@ -417,8 +417,7 @@ common_start_core(void)
     int64_t ignore_ret = -1;
 
     cpuid = platform_get_current_cpu_num();
-    if (cpuid < 0)
-    {
+    if (cpuid < 0) {
         goto failure;
     }
 
@@ -499,8 +498,7 @@ common_stop_core(void)
     int64_t cpuid = 0;
 
     cpuid = platform_get_current_cpu_num();
-    if (cpuid < 0)
-    {
+    if (cpuid < 0) {
         goto corrupted;
     }
 

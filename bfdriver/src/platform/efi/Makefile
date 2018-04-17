@@ -5,7 +5,7 @@ ARCH		:= 	$(shell uname -m)
 
 include Make.efi
 
-SYSROOT		?= ../../../../../build/prefixes/x86_64-userspace-elf
+SYSROOT		?= ../../../../../buildex/prefixes/x86_64-userspace-elf
 
 LIBDIR		:= $(SYSROOT)/lib
 
@@ -20,7 +20,6 @@ CFLAGS  	+= -I$(TOP)/include \
 			   -I$(TOP)/../../../../bfelf_loader/include \
 			   -I$(SYSROOT)/include/efi \
 			   -I$(SYSROOT)/include/efi/x86_64 
-
 
 LDFLAGS		+= -shared -Bsymbolic -L$(LIBDIR)
 LDFLAGS		+= --defsym=EFI_SUBSYSTEM=0xa --no-undefined

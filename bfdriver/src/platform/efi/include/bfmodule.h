@@ -6,8 +6,8 @@
 #include "common.h"
 
 #define HYPERVISOR_MODULE(mod) \
-extern unsigned char mod[];    \
-extern unsigned int mod##_len;
+    extern unsigned char mod[];    \
+    extern unsigned int mod##_len;
 
 #include "modlist.h"
 #undef HYPERVISOR_MODULE

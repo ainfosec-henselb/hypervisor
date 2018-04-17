@@ -7,23 +7,18 @@
 #define KGDT64_SYS_TSS          0x60
 #define AMD64_TSS               9
 
-typedef union _KGDTENTRY64
-{
-    struct
-    {
+typedef union _KGDTENTRY64 {
+    struct {
         UINT16 LimitLow;
         UINT16 BaseLow;
-        union
-        {
-            struct
-            {
+        union {
+            struct {
                 UINT8 BaseMiddle;
                 UINT8 Flags1;
                 UINT8 Flags2;
                 UINT8 BaseHigh;
             } Bytes;
-            struct
-            {
+            struct {
                 UINT32 BaseMiddle : 8;
                 UINT32 Type : 5;
                 UINT32 Dpl : 2;
@@ -39,16 +34,14 @@ typedef union _KGDTENTRY64
         UINT32 BaseUpper;
         UINT32 MustBeZero;
     };
-    struct
-    {
+    struct {
         INT64 DataLow;
         INT64 DataHigh;
     };
 } KGDTENTRY64, *PKGDTENTRY64;
 
 #pragma pack(push,4)
-typedef struct _KTSS64
-{
+typedef struct _KTSS64 {
     UINT32 Reserved0;
     UINT64 Rsp0;
     UINT64 Rsp1;
@@ -60,17 +53,16 @@ typedef struct _KTSS64
 } KTSS64, *PKTSS64;
 #pragma pack(pop)
 
-typedef struct _KDESCRIPTOR
-{
+typedef struct _KDESCRIPTOR {
     UINT16 Pad[3];
     UINT16 Limit;
-    void* Base;
+    void *Base;
 } KDESCRIPTOR, *PKDESCRIPTOR;
 
 void _writeeflags(int64_t);
 int64_t _readeflags();
-void _sgdt(void*);
-void _lgdt(void*);
+void _sgdt(void *);
+void _lgdt(void *);
 void _ltr(int16_t);
 uint16_t _str();
 void _set_vmxe();

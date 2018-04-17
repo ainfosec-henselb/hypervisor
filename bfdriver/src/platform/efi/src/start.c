@@ -25,14 +25,13 @@ VOID bf_start_hypervisor_on_core(VOID *data)
     _writeeflags(_readeflags() & ~(1 << 18));
 
     KDESCRIPTOR old_gdt;
-    _sgdt((void*)&old_gdt.Limit);
+    _sgdt((void *)&old_gdt.Limit);
     uint16_t old_tr = _str();
 
     PKGDTENTRY64 tss_entry, new_gdt;
     PKTSS64 tss;
     KDESCRIPTOR gdtr;
     _sgdt((void *)&gdtr.Limit);
-    Print(L"gdtr.Base: %x gdtr.Limit: %x\n", gdtr.Base, gdtr.Limit);
 
     UINTN newsize = gdtr.Limit + 1;
     if (KGDT64_SYS_TSS + sizeof(*tss_entry) > newsize) {
@@ -68,7 +67,6 @@ VOID bf_start_hypervisor_on_core(VOID *data)
     tss_entry->Bits.Granularity = 0;
     tss_entry->MustBeZero = 0;
 
-    //Print(L"Loading GDT\n");
     gdtr.Base = new_gdt;
     gdtr.Limit = KGDT64_SYS_TSS + sizeof(*tss_entry);
     _lgdt((void *)&gdtr.Limit);
@@ -82,15 +80,13 @@ VOID bf_start_hypervisor_on_core(VOID *data)
 
     // Load previous gdt/tr
     _lgdt((void*)&old_gdt.Limit);
-    _str(old_tr);
+    _ltr(old_tr);
 
     bf_free_pool((void*)new_gdt);
     bf_free_pool((void*)tss);
 
     Print(L"Core started.\n");
 
-    //common_stop_core();
-    //Print(L"Core stopped.\n");
     return;
 
 }
@@ -99,7 +95,7 @@ EFI_STATUS bf_start_by_startupallaps()
 {
     EFI_STATUS status;
     UINTN cpus;
-    EFI_MP_SERVICES_PROTOCOL* mp_services;
+    EFI_MP_SERVICES_PROTOCOL *mp_services;
 
     EFI_GUID gEfiMpServiceProtocolGuid = EFI_MP_SERVICES_PROTOCOL_GUID;
     status = gBS->LocateProtocol(&gEfiMpServiceProtocolGuid,
@@ -108,8 +104,7 @@ EFI_STATUS bf_start_by_startupallaps()
     CHERROR(status);
 
     cpus = bf_num_cpus();
-    if (cpus == 0)
-    {
+    if (cpus == 0) {
         Print(L"Error: bf_start_by_startupallaps: bf_num_cpus\n");
         return EFI_NOT_FOUND;
     }
@@ -144,7 +139,7 @@ EFI_STATUS bf_start_by_switchbsp()
 {
     EFI_STATUS status;
     UINTN cpus;
-    EFI_MP_SERVICES_PROTOCOL* mp_services;
+    EFI_MP_SERVICES_PROTOCOL *mp_services;
 
     EFI_GUID gEfiMpServiceProtocolGuid = EFI_MP_SERVICES_PROTOCOL_GUID;
     status = gBS->LocateProtocol(&gEfiMpServiceProtocolGuid,
@@ -153,8 +148,7 @@ EFI_STATUS bf_start_by_switchbsp()
     CHERROR(status);
 
     cpus = bf_num_cpus();
-    if (cpus == 0)
-    {
+    if (cpus == 0) {
         Print(L"Error: bf_start_by_switchbsp: bf_num_cpus\n");
         return EFI_NOT_FOUND;
     }
@@ -194,7 +188,7 @@ EFI_STATUS bf_start_by_interactive()
     Print(L"Interactive start\n");
     EFI_STATUS status;
 
-    EFI_MP_SERVICES_PROTOCOL* mp_services;
+    EFI_MP_SERVICES_PROTOCOL *mp_services;
 
     EFI_GUID gEfiMpServiceProtocolGuid = EFI_MP_SERVICES_PROTOCOL_GUID;
     status = gBS->LocateProtocol(&gEfiMpServiceProtocolGuid,
@@ -203,8 +197,7 @@ EFI_STATUS bf_start_by_interactive()
     CHERROR(status);
 
     UINTN ncpus = bf_num_cpus();
-    if (ncpus == 0)
-    {
+    if (ncpus == 0) {
         Print(L"bf_start_by_interactive: error bf_num_cpus returned zero\n");
         return EFI_NOT_FOUND;
     }
@@ -212,18 +205,14 @@ EFI_STATUS bf_start_by_interactive()
     UINTN started[16] = {0};
 
     EFI_INPUT_KEY pressed;
-    while (1)
-    {
+    while (1) {
         EFI_STATUS status = console_get_keystroke(&pressed);
         CHERROR(status);
 
-        if (pressed.ScanCode == 0)
-        {
-            if (pressed.UnicodeChar >= L'1' && pressed.UnicodeChar <= L'9')
-            {
+        if (pressed.ScanCode == 0) {
+            if (pressed.UnicodeChar >= L'1' && pressed.UnicodeChar <= L'9') {
                 UINTN core = (UINTN)(pressed.UnicodeChar - L'0');
-                if (started[core] == 0)
-                {
+                if (started[core] == 0) {
                     status = mp_services->StartupThisAP(mp_services,
                                                         (EFI_AP_PROCEDURE)bf_start_hypervisor_on_core,
                                                         core,
@@ -234,8 +223,7 @@ EFI_STATUS bf_start_by_interactive()
                     CHERROR(status);
                     started[core] = 1;
                 }
-                else
-                {
+                else {
                     status = mp_services->StartupThisAP(mp_services,
                                                         (EFI_AP_PROCEDURE)bf_cpuid_on_core,
                                                         core,
@@ -246,21 +234,17 @@ EFI_STATUS bf_start_by_interactive()
                     CHERROR(status);
                 }
             }
-            else if (pressed.UnicodeChar == L'0')
-            {
-                if (started[0] == 0)
-                {
+            else if (pressed.UnicodeChar == L'0') {
+                if (started[0] == 0) {
                     bf_start_hypervisor_on_core(NULL);
                     started[0] = 1;
                 }
-                else
-                {
+                else {
                     bf_cpuid_on_core(NULL);
                 }
             }
         }
-        else
-        {
+        else {
             //Print(L"sc, uc: %x, %x\n", pressed.ScanCode, pressed.UnicodeChar);
             break;
         }
